@@ -32,7 +32,7 @@ CREATE TABLE Exhibition (
     Location VARCHAR(100),
     Curator VARCHAR(100),
     ExhibitionCategory VARCHAR(50),
-    FOREIGN KEY (ExhibitionType) REFERENCES Artwork(Type)
+    FOREIGN KEY (Type) REFERENCES Artwork(Type)
 );
 
 -- Sale
