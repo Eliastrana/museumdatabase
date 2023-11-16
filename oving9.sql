@@ -6,8 +6,7 @@ CREATE TABLE Artist (
     LastName VARCHAR(100),
     Birthdate DATE,
     Nationality VARCHAR(50),
-    Era VARCHAR(50),
-    Style VARCHAR(50)
+    Era VARCHAR(50)
 );
 
 -- Artwork
@@ -20,6 +19,7 @@ CREATE TABLE Artwork (
     ProductionYear INT,
     Dimensions VARCHAR(50),
     Status VARCHAR(20) CHECK (Status IN ('storage', 'exhibited', 'not available')),
+    SaleStatus VARCHAR(20) CHECK (SaleStatus IN ('for sale', 'sold', 'not for sale')),
     FOREIGN KEY (ArtistID) REFERENCES Artist(ArtistID)
 );
 
@@ -31,7 +31,8 @@ CREATE TABLE Exhibition (
     EndDate DATE,
     Location VARCHAR(100),
     Curator VARCHAR(100),
-    ExhibitionCategory VARCHAR(50)
+    ExhibitionCategory VARCHAR(50),
+    FOREIGN KEY (ExhibitionType) REFERENCES Artwork(Type)
 );
 
 -- Sale
@@ -45,3 +46,12 @@ CREATE TABLE Sale (
     Seller VARCHAR(255),
     FOREIGN KEY (ArtworkID) REFERENCES Artwork(ArtworkID)
 );
+
+CREATE TRIGGER update_sale_status
+AFTER INSERT ON Sale
+FOR EACH ROW
+BEGIN
+    UPDATE Artwork
+    SET SaleStatus = 'sold'
+    WHERE Artwork.ArtworkID = NEW.ArtworkID;
+END;
